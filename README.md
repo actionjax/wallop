@@ -1,5 +1,7 @@
 # :zap: Wallop :zap:
 
+Modified Maddox's Wallop to work on Windows 8 (7 will probably work too)
+
 Wallop is a transcoding server for your [HDHomeRun Prime](http://www.silicondust.com/products/hdhomerun/prime/).
 
 Wallop lets you watch TV streams on your iPhone, iPad, Roku, Web, Android device. Even away from home.
