@@ -10,6 +10,8 @@ require 'eventmachine'
 require 'thin'
 require 'json'
 require 'toml'
+require 'win32/process'
+require 'sys/proctable'
 
 RACK_ROOT = File.dirname(File.expand_path(__FILE__)) + '/../'
 RACK_ENV = ENV['RACK_ENV'] || 'development'

@@ -1,11 +1,11 @@
-hdhomerun_host = "192.168.1.13"
-ffmpeg_path = "/usr/local/bin/ffmpeg"
+hdhomerun_host = "192.168.1.115"
+ffmpeg_path = "D:/wallop/ffmpeg_x86_64/ffmpeg.exe"
 transcoding_path = "./tmp"
 port = "8888"
-hd_start = 500
+hd_start = 1000
 
 [channel_logos]
-506 = "cbs.png"
-508 = "abc.png"
-511 = "fox.png"
-512 = "nbc.png"
+1009 = "cbs.png"
+1007 = "abc.png"
+1005 = "fox.png"
+1004 = "nbc.png"

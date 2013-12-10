@@ -1,4 +1,5 @@
 include FileUtils
+include Sys
 
 module Wallop
   LOG_PATH = 'log/wallop.log'
@@ -26,7 +27,9 @@ module Wallop
   end
 
   def self.ffmpeg_command(channel, resolution='1280x720', bitrate='3000k')
-    %{exec #{config['ffmpeg_path']} -threads 4 -f mpegts -analyzeduration 2000000 -i #{raw_stream_url_for_channel(channel)} -bufsize 100Mi -loglevel warning -async 1 -ac 2 -acodec libfdk_aac -b:v #{bitrate} -minrate #{bitrate.gsub(/\d+/){ |o| (o.to_i * 0.80).to_i }} -maxrate #{bitrate} -vcodec libx264 -preset superfast -tune zerolatency -s #{resolution} -flags -global_header -fflags +genpts -map 0:0 -map 0:1 -hls_time 2 -hls_wrap 40 #{transcoding_path}/#{channel}.m3u8 >log/ffmpeg.log 2>&1}
+    command = "#{config['ffmpeg_path']} -threads 4 -f mpegts -analyzeduration 2000000 -i #{raw_stream_url_for_channel(channel)} -bufsize 100Mi -loglevel warning -async 1 -ac 2 -acodec libfdk_aac -b:v #{bitrate} -minrate #{bitrate.gsub(/\d+/){ |o| (o.to_i * 0.80).to_i }} -maxrate #{bitrate} -vcodec libx264 -preset superfast -tune zerolatency -s #{resolution} -flags -global_header -fflags +genpts -map 0:0 -map 0:1 -hls_time 2 -hls_wrap 40 #{transcoding_path}/#{channel}.m3u8 >log/ffmpeg#{channel}.log 2>&1"
+    Wallop.logger.info command
+    command
   end
 
   def self.snapshot_command(channel, width=nil)
@@ -75,15 +78,34 @@ module Wallop
       # check to see when the last time the stream was accessed
       # if it was longer than 60 seconds, kill the session
       if session[:last_read].to_i < Time.now.to_i - 60
-        Wallop.logger.info "KILLING SESSION - #{key} - #{session[:pid]}"
-        if Process.kill('QUIT', session[:pid])
-          begin
-            Process::waitpid(session[:pid])
-          rescue Errno::ECHILD
+
+        pids = []
+        ProcTable.ps{ |s|
+          pids.push(s.pid) if s.cmdline =~ /ffmpeg.exe.*auto\/v#{key}/i
+        }
+
+        if pids.any?
+          Wallop.logger.info "KILLING SESSION - #{key} - #{pids.last}"
+          if Process.kill(9, pids.last)
+            begin
+              Process::waitpid(session[:pid])
+            rescue Errno::ECHILD
+            end
+            cleanup_channel(key)
+            sessions.delete(key)
           end
-          cleanup_channel(key)
-          sessions.delete(key)
         end
+
+        # Wallop.logger.info "KILLING SESSION - #{key} - #{session[:pid]}"
+        # #if Process.kill('QUIT', session[:pid])
+        # if Process.kill(2, session[:pid])
+        #   begin
+        #     Process::waitpid(session[:pid])
+        #   rescue Errno::ECHILD
+        #   end
+        #   cleanup_channel(key)
+        #   sessions.delete(key)
+        # end
       else
         begin
           dead = Process::waitpid(session[:pid], Process::WNOHANG)
@@ -107,6 +129,7 @@ module Wallop
     # delete all segments
     rm(Dir.glob("#{transcoding_path}/#{channel}*.ts"))
   rescue Errno::ENOENT
+  rescue Errno::EACCES
   end
 
   def self.raw_stream_url_for_channel(channel)
@@ -115,6 +138,7 @@ module Wallop
 
   def self.hdhomerun_lineup_url
     "http://#{config['hdhomerun_host']}/lineup.json?show=subscribed"
+    #"http://#{config['hdhomerun_host']}/lineup.json"
   end
 
   def self.lineup
