@@ -6,8 +6,7 @@ Wallop lets you watch TV streams on your iPhone, iPad, Roku, Web, Android device
 
 ## What's different from Maddox/Wallop
 
-Modified Maddox's Wallop to work on Windows 8 (7 will probably work too)
-To make it work in Windows, run the following (taken from tmm1 https://github.com/maddox/wallop/issues/16).  Note: You may need to include the Ruby Dev Kit env var path if you haven't already.  (Run <RubyDevKit>\devkitvars.bat before the commands below in the Command Prompt).
+I modified Maddox/Wallop to work on Windows 7/8.  To make it work in Windows, run the following (taken from tmm1 https://github.com/maddox/wallop/issues/16).  Note: You may need to include the Ruby Dev Kit env var path if you haven't already.  i.e. Run the devkitvars.bat before the commands below in the Command Prompt.
 
 ```
 gem install bundler
