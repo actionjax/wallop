@@ -1,19 +1,19 @@
 # :zap: Wallop :zap:
 
-## What's different
+Wallop is a transcoding server for your [HDHomeRun Prime](http://www.silicondust.com/products/hdhomerun/prime/).
+
+Wallop lets you watch TV streams on your iPhone, iPad, Roku, Web, Android device. Even away from home.
+
+## What's different from Maddox/Wallop
 
 Modified Maddox's Wallop to work on Windows 8 (7 will probably work too)
-To make it work in Windows, run the following (taken from tmm1 https://github.com/maddox/wallop/issues/16)
+To make it work in Windows, run the following (taken from tmm1 https://github.com/maddox/wallop/issues/16).  Note: You may need to include the Ruby Dev Kit env var path if you haven't already.  (Run <RubyDevKit>\devkitvars.bat before the commands below in the Command Prompt).
 
 ```
 gem install bundler
 bundle install --standalone --binstubs --local --path vendor/gems --quiet
 gallop.bat
 ```
-
-Wallop is a transcoding server for your [HDHomeRun Prime](http://www.silicondust.com/products/hdhomerun/prime/).
-
-Wallop lets you watch TV streams on your iPhone, iPad, Roku, Web, Android device. Even away from home.
 
 ## Warning
 
