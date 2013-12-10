@@ -5,7 +5,8 @@
 Modified Maddox's Wallop to work on Windows 8 (7 will probably work too)
 To make it work in Windows, run the following (taken from tmm1 https://github.com/maddox/wallop/issues/16)
 
-```gem install bundler
+```
+gem install bundler
 bundle install --standalone --binstubs --local --path vendor/gems --quiet
 gallop.bat
 ```
