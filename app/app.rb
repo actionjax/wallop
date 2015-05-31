@@ -56,16 +56,17 @@ module Wallop
     end
 
     post '/channels/:channel/tune' do
-
       ## validate input
       resolution = params[:resolution] =~ /\A\d+x\d+\z/ ? params[:resolution] : '1280x720'
+      #resolution = params[:resolution] =~ /\A\d+x\d+\z/ ? params[:resolution] : '640x360'
       bitrate = params[:bitrate] =~ /\A\d+k\z/ ? params[:bitrate] : '3000k'
+      #bitrate = params[:bitrate] =~ /\A\d+k\z/ ? params[:bitrate] : '500k'
       channel = params[:channel] =~ /\A\d+(.\d+)?\z/ ? params[:channel] : '3'
 
       if !Wallop.sessions.has_key?(channel)
         Wallop.cleanup_channel(channel)
         Wallop.logger.info "Tuning channel #{channel} with quality settings of #{resolution} @ #{bitrate}"
-        pid  = POSIX::Spawn::spawn(Wallop.ffmpeg_command(channel, resolution, bitrate))
+        pid  = POSIX::Spawn::spawn(Wallop.ffmpeg_command(channel, resolution, bitrate))      
         Process::waitpid(pid, Process::WNOHANG)
         Wallop.logger.info "Creating session for channel #{channel}"
         Wallop.sessions[params[:channel]] = {:channel => channel, :pid => pid, :ready => false, :last_read => Time.now}
