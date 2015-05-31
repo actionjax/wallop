@@ -1,7 +1,8 @@
 hdhomerun_host = "192.168.1.115"
 ffmpeg_path = "D:/wallop/ffmpeg_x86_64/ffmpeg.exe"
 transcoding_path = "./tmp"
-port = "8888"
+#port = "8888"
+port = "8889"
 hd_start = 1000
 
 [ffmpeg]
